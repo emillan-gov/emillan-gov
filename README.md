@@ -1,0 +1,3 @@
+- 👋 Hi, I’m @emillan-gov
+- 👀 I’m interested in Geospatial Analysis and innovative ways to help decision makers in the BC Government 
+- 🌱 I’m currently learning about remote sensing, machine learning and using H3 for Land Management
