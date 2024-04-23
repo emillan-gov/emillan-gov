@@ -24,7 +24,7 @@ import geopandas as gpd
 import pandas as pd
 import shutil
 import fiona
-
+from PIL import Image
 
 # import the south coast function library and the email function 
 sys.path.append(r'\\spatialfiles.bcgov\work\srm\sry\Local\scripts\python')
@@ -139,7 +139,7 @@ class AGOL_SURVEY_FEATURE:
         self.primary_key_field = primary_key_field
         self.primary_key = primary_key
         self.feature = self.AGOL_SURVEY_CONNECTION.feature_layer.query(where=f"{primary_key_field} = '{primary_key}'", out_fields='*')
-
+        print(self.feature)
         # USED FOR CREATING THE BACKUP FOLDER FOR ALL RECORDS SUBMITTED TO S123. DIRECTORY CREATED BASED ON ITEM ID AND OBJECT ID
         self.archive_directory = r"\\spatialfiles.bcgov\Archive\srm\sry\Local\ArcGISOnline\S123_DATA__BACKUPS"
         self.archive_folder = os.path.join(self.archive_directory, f"ARCHIVE_{self.AGOL_SURVEY_CONNECTION.item_id}")
@@ -161,8 +161,6 @@ class AGOL_SURVEY_FEATURE:
             shutil.rmtree(self.feature_backup_folder)
             os.makedirs(self.feature_backup_folder)
             print("    ARCHIVE FEATURE FOLDER OVERWRITTEN")
-
-        
 
         # SOME ERROR HANDLING (EG - SHOULD ONLY BE ABLE ACCEPET SINGLE PART GEOMETRY?)
 
@@ -199,13 +197,15 @@ class AGOL_SURVEY_FEATURE:
         gdf = gpd.GeoDataFrame(sdf, geometry='SHAPE')
 
         # SAVE AS GeoJSON
-        gdf.to_file(f"{self.feature_backup_folder}/{self.primary_key_field}_{self.primary_key}.geojson",driver='GeoJSON')
+        self.geojson = f"{self.feature_backup_folder}/{self.primary_key_field}_{self.primary_key}.geojson"
+        gdf.to_file(self.geojson,driver='GeoJSON')
         
         # SAVE AS KML (Required import of Fiona KML Driver)
         fiona.supported_drivers['KML'] = "rw"
         gdf.to_file(f"{self.feature_backup_folder}/{self.primary_key_field}_{self.primary_key}.kml",driver='KML')
 
         # SAVE AS Shapefile (Requires Handling of Datetime Fields)
+        self.shapefile_path = f"{self.feature_backup_folder}/{self.primary_key_field}_{self.primary_key}"
         for col in sdf.columns:
             if pd.api.types.is_datetime64_any_dtype(sdf[col]):
                 sdf[col] = sdf[col].dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -213,14 +213,22 @@ class AGOL_SURVEY_FEATURE:
 
         if gdf.crs is None:
             gdf.set_crs(epsg=4236, inplace=True)
-        # gdf = gdf.to_crs(epsg=3005)
 
-        gdf.to_file(f"{self.feature_backup_folder}/{self.primary_key_field}_{self.primary_key}",driver='ESRI Shapefile')
-        shutil.make_archive(f"{self.feature_backup_folder}/{self.primary_key_field}_{self.primary_key}", 'zip', f"{self.feature_backup_folder}/{self.primary_key_field}_{self.primary_key}")
+        gdf.to_file(self.shapefile_path, driver='ESRI Shapefile')
+        shutil.make_archive(self.shapefile_path, 'zip', self.shapefile_path)
+
+    def attach_new_image(self, image_path, image_name):
+        """
+        """
+        self.featurelayer_item = self.AGOL_SURVEY_CONNECTION.gis.content.get(self.AGOL_SURVEY_CONNECTION.item_id)
+        self.featurelayer = FeatureLayer.fromitem(self.featurelayer_item)
+        with open(image_path, 'rb') as file:
+            attach_result = self.featurelayer.attachments.add(self.primary_key, image_path, image_name)
+            print("    IMAGE ATTACHED")
 
 class MAMU_AGOL_TOOLS:
 
-    def __init__(self, input_shape, email, oid, population_shapes, provincial_dem):
+    def __init__(self, feature):
         """
         This constructor is a specialized method used to initialize newly 
         created objects. It is automatically called whena new instance of
@@ -231,11 +239,12 @@ class MAMU_AGOL_TOOLS:
         The configuration of the arcpy environment is included in this
         constructor. 
         """
-        self.input_shape = input_shape
-        self.email = email
-        self.oid = oid
-        self.population_shapes = population_shapes
-        self.provincial_dem = provincial_dem
+        self.feature_class = "temp_fc"
+        self.email = "temp"
+        self.oid = feature.primary_key
+        self.population_shapes = r"\\spatialfiles.bcgov\work\srm\sry\Workarea\emillan\MAMU\SCRIPT\MAMU_Screening\MAMU_Screening_Workspace\MAMU_Screening_Workspace.gdb\MAMU_WHA"
+        self.provincial_dem = r"\\imagefiles.bcgov\dem\elevation\trim_25m\bcalbers\tif\bc_elevation_25m_bcalb.tif"
+
         
         # arcpy env configuration 
         arcpy.env.workspace = r"\\spatialfiles.bcgov\work\srm\sry\Workarea\emillan\MAMU\SCRIPT\MAMU_Screening\MAMU_Screening_Workspace\MAMU_Screening_Workspace.gdb"
@@ -263,10 +272,13 @@ class MAMU_AGOL_TOOLS:
         # datapaths 
         self.vri = f'{bcgw_path}/{self.bcgw_name}/WHSE_FOREST_VEGETATION.VEG_COMP_LYR_R1_POLY'
 
+        # CONVERT JSON TO FEATURE CLASS
+        arcpy.conversion.JSONToFeatures(feature.geojson, self.feature_class)
+
     def prepare_input_shape_dem(self):
         """
         """
-        outExtractByMask = arcpy.sa.ExtractByMask(self.provincial_dem, self.input_shape, "INSIDE")
+        outExtractByMask = arcpy.sa.ExtractByMask(self.provincial_dem, self.feature_class, "INSIDE")
         temp_file = r"\\spatialfiles.bcgov\work\srm\sry\Workarea\emillan\MAMU\SCRIPT\MAMU_Screening\MAMU_Screening_Workspace\raster_wha_class_test.tif"
         outExtractByMask.save(temp_file)
 
@@ -289,7 +301,7 @@ class MAMU_AGOL_TOOLS:
                 # the 'sample' represent the input shape and the entire vri will be clipped to this. at some point error handling to prevent large files should be put in place
                 arcpy.analysis.Clip(
                 in_features=self.vri,
-                clip_features=self.input_shape,
+                clip_features=self.feature_class,
                 out_feature_class=r"temp_clip",
                 cluster_tolerance=None)
 
@@ -328,38 +340,101 @@ class MAMU_AGOL_TOOLS:
             
         print("drawing shape")
         plt.figure(figsize=(10, 6))
-        plt.xlabel('Value')
+        plt.xlabel('Stand Age')
         plt.ylabel('Density')
-        plt.title('Distribution of Sample vs. Population')
+        plt.title(f'Distribution of Stand Age in Shape {self.oid}')
         plt.legend(loc='upper right')
         plt.hist(sample_values_nonzero, bins=50, label='Sample', density=True, color="#003366")  # `density=True` normalizes the histograms
-        plt.show()
+        
+        save_name = f"{FEATURE.feature_backup_folder}/test_image.jpeg"
+        plt.savefig(save_name, format='jpeg')
+
+    def create_suitable_habitat_report(self):
+        """
+        Suitable_HabitatLayer = 
+        """
+        temp_fc = f"suit_hab_clip_{self.oid}"
+
+        Suitable_HabitatLayer = r"\\spatialfiles.bcgov\Work\wlap\nan\Workarea\Ecosystems_share\MAMU\Suitable_Habitat\SuitHab_Updates\SuitHab_Updates.gdb\Working\SuitHab_WNVI_EVI_SMC_depl_to_Dec2022_EditedMar2024"
+        arcpy.analysis.PairwiseClip(
+            in_features=Suitable_HabitatLayer,
+            clip_features=self.feature_class,
+            out_feature_class=temp_fc,
+            cluster_tolerance=None
+        )
+
+
+        # Add a new field for processed habitat class values
+        processed_field = 'Processed_Habitat'
+        arcpy.AddField_management(temp_fc, processed_field, "SHORT")
+
+        # Use an update cursor to modify the values
+        with arcpy.da.UpdateCursor(temp_fc, ['SuitHab_Cl', processed_field]) as cursor:
+            for row in cursor:
+                habitat_class = row[0]
+                if habitat_class is None:
+                    row[1] = 6  # Convert NULL to 7
+                elif habitat_class == "VRI":
+                    row[1] = 3  # Convert "VRI" to 3
+                elif habitat_class == "Model":
+                    row[1] = 3 # Convert "Model to 3"
+                else:
+                    try:
+                        row[1] = int(habitat_class)  # Convert numeric strings to int
+                    except ValueError:
+                        row[1] = 0  # Hand
+                cursor.updateRow(row)
+        
+        # Create 5m Raster from Polygon
+        save_name = f"{FEATURE.feature_backup_folder}/MAMU_HAVB_DIST_{self.oid}.tif"
+        print("    CREATING RASTER")
+        arcpy.FeatureToRaster_conversion(temp_fc, processed_field, save_name, 5)
+
+        # Create JPEG for AGPL
+        with Image.open(save_name) as img:
+            # Convert image to RGB, in case it's in a different mode
+            img = img.convert('RGB')
+            # Save it as JPEG
+            jpg_name = f"{FEATURE.feature_backup_folder}/MAMU_HAB_DIST_{self.oid}.jpg"
+            img.save(jpg_name, 'JPEG')
+
+        # Create Histogram with Rasterio
+        # with rasterio.open(save_name) as src:
+        #     data = src.read(1)  # Read the first band
+        #     # Mask data for valid habitat values
+        #     data_masked = np.ma.masked_outside(data, 1, 6)
+            
+        #     # Create histogram
+        #     plt.hist(data_masked.compressed(), bins=np.arange(0.5, 7.5, 1), edgecolor='black', color='#003366')
+        #     plt.title('Habitat Distribution')
+        #     plt.xlabel('Habitat Class')
+        #     plt.ylabel('Frequency')
+        #     plt.xticks(np.arange(1, 7))
+
+        #     graph_name = f"{FEATURE.feature_backup_folder}/MAMU_HAB_DIST_GRAPH{self.oid}.jpg"
+        #     plt.savefig(graph_name, format='jpeg')
+
+            return jpg_name
 
 
 # %%**********************************************************************
-# TEST SPACE                                                            **
+# TEST SPACE - MAIN/START                                               **
 # ************************************************************************
 GIS_CONNECTION = AGOL_SURVEY_CONNECTION("c65e0223d8e44d33aaf9aad799c6876a", field_list=[])
+# GIS_CONNECTION.delete_all_features()
 for object_id in GIS_CONNECTION.new_oids:
     FEATURE = AGOL_SURVEY_FEATURE(GIS_CONNECTION, primary_key=object_id)
     FEATURE.change_feature_status(update_field='submission_status', new_status="IN PROGRESS") 
     FEATURE.prepare_spatial_data()
 
+    # PERFORM MAMU ANALYSIS
+    MAMU_OBJ = MAMU_AGOL_TOOLS(FEATURE)
 
+    POP_HAB_IMAGE = MAMU_OBJ.create_suitable_habitat_report()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    # UPLOAD IMAGE
+    FEATURE.attach_new_image(image_path=POP_HAB_IMAGE, image_name=f'HABITAT_MAP_{FEATURE.primary_key}')
+    FEATURE.change_feature_status(update_field='submission_status', new_status="COMPLETE") 
 
 
 
