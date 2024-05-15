@@ -1,6 +1,6 @@
 🌍 About Me
 
-Hello! I'm a Geospatial Analyst based in British Columbia, Canada, where I have the privilege of working in the public servuce to leverage geospatial technologies for the improvement of our community and the environment. I am fueled by a passion for creative solutions to difficult questions.
+Hello! I'm a Geospatial Analyst based in British Columbia, Canada, where I have the privilege of working in the public service to leverage geospatial technologies for the improvement of our community and the environment. I am fueled by a passion for creative solutions to difficult questions.
 
 📊 What I Do
 
