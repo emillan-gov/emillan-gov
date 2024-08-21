@@ -1,0 +1,587 @@
+#%%
+"""
+Code Mostly based on example here:
+https://code.usgs.gov/eros-user-services/machine_to_machine/m2m_landsat_9_search_download/-/blob/main/M2M_Landsat_9_Metadata_Search_Download.ipynb?ref_type=heads#dataset-search
+"""
+import boto3
+import os
+import requests
+import json
+import socket
+from shapely.geometry import Polygon, box
+from getpass import getpass
+import sys
+import time
+from dateutil.relativedelta import relativedelta
+import cgi
+import os
+import pandas as pd
+import geopandas as gpd
+import warnings
+from arcgis.gis import GIS
+from arcgis.features import FeatureLayerCollection
+warnings.filterwarnings("ignore")
+from oauthlib.oauth2 import BackendApplicationClient
+from requests_oauthlib import OAuth2Session
+from datetime import datetime
+import ast
+from osgeo import gdal
+import numpy as np  
+import re
+import arcpy
+import psutil 
+
+# import the south coast function library and the email function 
+sys.path.append(r'\\spatialfiles.bcgov\work\srm\sry\Local\scripts\python')
+from sc_python_function_library import * 
+import email_function 
+from email_function import SendEmail
+
+# %% Definition of Classes and Modules
+class fire_severity_analysis:
+    def __init__(self, fire_ID):
+        """
+        This class is used to compile and organize the information required for creating the 
+        payload requests for USGS imagery. 
+
+        THE INTENT OF THIS ANALYSIS IS TO PROVIDE AN EARLY GLIMPSE OF FIRE SEVERITY ON THE
+        IN THE IMMEDIATE AFTERMATH OF A WILDFIRE SEASON. AS A RESULT, SOME WEB SCRAPING WILL 
+        FROM THE "FIRE PERIMETERS - CURRENT" DATASET. 
+
+        ANY FIRES MOVED INTO THE "HISTORICAL" AREA SHOULD DEFER TO THE OFFICIAL FAIB WILDFIRE 
+        SEVERITY LAYER. 
+        """
+        "W:\srm\sry\Workarea\emillan\!Burn_Severity_FAIB\data\scripts\data\fire_G41493.geojson"
+
+        "\\spatialfiles.bcgov\work\srm\sry\Workarea\emillan\!Burn_Severity_FAIB\data\scripts\data"
+
+        print("CONSTRUCTING QUERY DATA...")
+        try:
+            self.fire_ID = fire_ID
+        except:
+            raise ValueError("     Error Encountered")
+        
+        print("CREATING AGOL CONNECTION...")
+        self.url = 'https://governmentofbc.maps.arcgis.com'
+        self.agol_username, self.agol_password = get_credentials("agol")
+        self.gis = GIS(self.url, self.agol_username, self.agol_password, verify_cert=False)
+
+        # CONNECT TO FIRE LOCATIONS - CURRENT - VIEW (AGOL ITEM 397a1defe7f04c2b8ef6511f6c087dbf)
+        """
+        This portion of the script connects to a specific ESRI Hosted Feature Layer and scrapes the data 
+        for a specified Fire based on it's ID.
+        """
+        fire_location = self.gis.content.get("397a1defe7f04c2b8ef6511f6c087dbf")
+        fire_location_feature_layer = FeatureLayerCollection.fromitem(fire_location).layers[0]
+        fire_location_fc_query = fire_location_feature_layer.query(where=f"FIRE_NUMBER = '{self.fire_ID}'")
+        df = fire_location_fc_query.sdf
+        num_rows = len(df)
+        
+        if len(df) > 1:
+            print(f"     ERROR: More than 1 Record Found in 'FIRE Locations - Current' with ID {self.fire_ID}")
+        elif len(df) < 1:
+            print(f"     ERROR: No Records Found in 'FIRE Locations - Current' with ID {self.fire_ID}")
+        elif len(df) == 1:
+            print(f"     Scraping Data from 'FIRE LOCATIONS - CURRENT' for fire {self.fire_ID}'...")
+            self.estimated_fire_size = df['CURRENT_SIZE'].iloc[0]
+            self.fire_centre = df['FIRE_CENTRE'].iloc[0]
+            self.fire_zone = df['ZONE'].iloc[0]
+
+            # GET DATE SEARCH PARAMS (PRE-FIRE)
+            self.ignition_date = df['IGNITION_DATE'].iloc[0]
+            self.string_ignition_date = self.ignition_date.strftime("%Y-%m-%d")
+            self.pre_fire_search_start = (self.ignition_date - relativedelta(months=3)).strftime("%Y-%m-%d")
+            self.pre_fire_search_end = (self.ignition_date - relativedelta(days=1)).strftime("%Y-%m-%d")
+
+            self.suspected_cause = df['FIRE_CAUSE'].iloc[0]
+            self.fire_type = df['FIRE_TYPE'].iloc[0]
+            self.approzimate_location = df['GEOGRAPHIC_DESCRIPTION'].iloc[0]
+            self.fire_url = df['FIRE_URL'].iloc[0]
+            self.response_type = df['RESPONSE_TYPE_DESC'].iloc[0]
+            self.out_date = df['FIRE_OUT_DATE'].iloc[0]
+
+        # CONNECT TO FIRE PERIMETERS - CURRENT - VIEW (AGOL ITEM 6ed3ec9b90f844fcaf9fea499bacae8e)
+        fire_perimeters = self.gis.content.get("6ed3ec9b90f844fcaf9fea499bacae8e")
+        fire_perimeters_feature_layer = FeatureLayerCollection.fromitem(fire_perimeters).layers[0]
+        fire_perimeters_fc_query = fire_perimeters_feature_layer.query(where=f"FIRE_NUMBER = '{self.fire_ID}'", return_geometry=True, out_fields='*')
+        df = fire_perimeters_fc_query.sdf
+        num_rows = len(df)
+
+        
+        if len(df) > 1:
+            print(f"     ERROR: More than 1 Record Found in 'FIRE PERIMETERS - Current' with ID {self.fire_ID}")
+        elif len(df) < 1:
+            print(f"     ERROR: No Records Found in 'FIRE PERIMETERS - Current' with ID {self.fire_ID}")
+        elif len(df) == 1:
+            print(f"     Scraping Data from 'FIRE PERIMETERS - CURRENT' for fire {self.fire_ID}'...")
+
+
+            self.actual_fire_size = df['FIRE_SIZE_HECTARES'].iloc[0]
+
+            # GET DATE SEARCH PARAMS (POST FIRE)
+            self.last_update = df['LOAD_DATE'].iloc[0]
+            self.string_last_update = self.last_update.strftime("%Y-%m-%d")
+            self.post_fire_search_end = (self.last_update + relativedelta(months=3)).strftime("%Y-%m-%d")
+            self.post_fire_search_start = (self.last_update + relativedelta(days=1)).strftime("%Y-%m-%d")
+
+            self.current_fire_status = df['FIRE_STATUS'].iloc[0]
+            self.perimeter_data_source = df['SOURCE'].iloc[0]
+            self.spatial = df['SHAPE'].iloc[0]
+
+            # CREATE GeoJSON FILE for the Requested Fire
+            self.web_merc_spatial = fire_perimeters_fc_query.features[0].geometry
+            polygon_coords = self.web_merc_spatial['rings'][0]
+            polygon = Polygon(polygon_coords)
+            gdf = gpd.GeoDataFrame(index=[0], crs='EPSG:3857', geometry=[polygon])
+            gdf_84 = gdf.to_crs(epsg=4326)
+            gdf_84.to_file(f"//spatialfiles.bcgov/work/srm/sry/Workarea/emillan/!Burn_Severity_FAIB/data/scripts/data/fire_{self.fire_ID}.geojson", driver="GeoJSON")
+
+            # Determine the Lower Left and Upper Right for Querying USGS
+            with open(f"//spatialfiles.bcgov/work/srm/sry/Workarea/emillan/!Burn_Severity_FAIB/data/scripts/data/fire_{self.fire_ID}.geojson", 'r') as file:
+                data = json.load(file)
+
+            def extract_coordinates(feature):
+                if feature['geometry']['type'] == 'Point':
+                    return [feature['geometry']['coordinates']]
+                elif feature['geometry']['type'] in ['MultiPoint', 'LineString']:
+                    return feature['geometry']['coordinates']
+                elif feature['geometry']['type'] in ['MultiLineString', 'Polygon']:
+                    return [coord for part in feature['geometry']['coordinates'] for coord in part]
+                elif feature['geometry']['type'] == 'MultiPolygon':
+                    return [coord for part in feature['geometry']['coordinates'] for subpart in part for coord in subpart]
+
+            all_coords = []
+            for feature in data['features']:
+                all_coords.extend(extract_coordinates(feature))
+            
+            # Transpose to get lists of all latitudes and longitudes
+            longitudes, latitudes = zip(*all_coords)
+
+            self.bottom_left_long = round(min(longitudes),4)
+            self.bottom_left_lat = round(min(latitudes),4)
+            self.top_right_long = round(max(longitudes),4)
+            self.top_right_lat = round(max(latitudes),4)
+
+            print(self.bottom_left_long)
+            print(self.bottom_left_lat)
+            print(self.top_right_long)
+            print(self.top_right_lat)
+        
+class planet_lab_queries:
+    """
+    CLIENT SECRETS Expire January 1, 2025
+    Will need to log in to Copernicus To Request new Secrets when they expire.
+    https://shapps.dataspace.copernicus.eu/dashboard/#/account/settings
+
+    The Main purpose of this Class is to help facilitate the search and downloading of Imagery from Copernicus.
+    It is considered a starting point for subsequent functions.
+
+    """
+    def __init__(self, fire_severity_object):      
+        print("Initializing Planet Lab Query Module")
+        self.client_id = "REDACTED"
+        self.client_secret = "REDACTED"
+        self.fire_query = fire_severity_object
+
+        # THESE SECRETS EXPIRE JANUARY 1, 2025 - NEW ONES CAN BE REQUESTED HERE
+        # https://eodata-s3keysmanager.dataspace.copernicus.eu/panel/s3-credentials
+        self.s3_access_key = "REDACTED"
+        self.s3_secret_key = "REDACTED"
+
+        client = BackendApplicationClient(client_id=self.client_id)
+        oauth =  OAuth2Session(client=client)
+
+        self.token = oauth.fetch_token(token_url='https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token',
+                          client_secret=self.client_secret, include_client_id=True)
+        
+    def search_sentinel_imagery(self, pre_or_post):
+        """Search for Sentinel imagery given an area of interest and date range.
+        
+        THIS WORKS!!!! - EJM AUG 14
+        """
+        print("    Starting Search...")
+        start_date = self.fire_query.post_fire_search_start
+        end_date = self.fire_query.post_fire_search_end
+        data_collection = "SENTINEL-2"
+
+        if pre_or_post == "post":
+            start_date = self.fire_query.post_fire_search_start
+            end_date = self.fire_query.post_fire_search_end
+        else:
+            start_date = self.fire_query.pre_fire_search_start
+            end_date = self.fire_query.pre_fire_search_end
+        
+        json = requests.get(f"https://catalogue.dataspace.copernicus.eu/resto/api/collections/Sentinel2/search.json?productType=S2MSI1C&cloudCover=[0,10]&startDate={start_date}T00:00:00Z&completionDate={end_date}T23:59:59Z&maxRecords=10&box={self.fire_query.bottom_left_long},{self.fire_query.bottom_left_lat},{self.fire_query.top_right_long},{self.fire_query.top_right_lat}", verify=False).json()
+        dataframe = pd.DataFrame.from_dict(json['features']).head(3)
+
+
+        if len(dataframe) > 0:
+            self.post_fire_imagery_count = len(dataframe)
+            self.safe_list = dataframe['properties'].apply(lambda x: x.get('productIdentifier')).tolist()
+
+            # # Save the Search Results to a specified excel file. This is mostly ised as break point for the script
+            root_directory = r'\\spatialfiles.bcgov\work\srm\sry\Workarea\emillan\!Burn_Severity_FAIB\data\scripts\data\SentinelQueryResults'
+            now = datetime.now()
+            now_string = now.strftime("%Y%m%d_%H%M%S")
+            folder_name = f"{self.fire_query.fire_ID}_{now_string}"
+
+            self.new_folder_path = os.path.join(root_directory, folder_name)
+            try:
+                os.makedirs(self.new_folder_path, exist_ok=True)
+            except OSError as e:
+                print("Error Creating Folder '{self.new_folder_path}': {e}")
+
+            self.sentinel_query_results = f"{self.new_folder_path}\\query_results.xlsx"
+            dataframe.to_excel(self.sentinel_query_results, index=False)
+        else:
+            print(f"There were no suitable Post Fire Results for fire {self.fire_query.fire_ID}")
+            self.post_fire_imagery_count = 0
+
+    def download_sentinel_imagery(self):
+        """
+        Uses the S3 Method to accomplish this
+        """
+        if self.post_fire_imagery_count > 0:
+            boto3_Session = boto3.session.Session()
+            s3 = boto3.resource(
+                's3',
+                endpoint_url='https://eodata.dataspace.copernicus.eu',
+                aws_access_key_id=self.s3_access_key,
+                aws_secret_access_key=self.s3_secret_key,
+                region_name='default',
+                verify=False
+            )
+
+            def download(bucket, product, target) -> None:
+                """
+                """
+                files = bucket.objects.filter(Prefix=product)
+
+                if not list(files):
+                    print(f"Could not find any files for {product}")
+
+                for file in files:
+                    new_name = file.key.split("/")[-1]
+                    temp_name = target + file.key.split("/")[-1]
+                    print(f"     Downloading {new_name}")
+                    try:
+                        bucket.download_file(file.key, temp_name)
+                    except:
+                        print("Error")
+
+            # Iterate through the list of Links (and pop off the beginning '/eodata/) and create new destination path
+            for product in self.safe_list:
+                # Create the product link
+                product = product.replace("/eodata/", "")
+                print (f"Downloading Files from {product}")
+                
+                # Create Target Folder
+                target_name = product.split('/')[-1].replace('.SAFE', '')
+
+                target_path = os.path.join(self.new_folder_path, target_name)
+                try:
+                    os.makedirs(target_path)
+                    print(f"Folder created: {target_path}")
+                except FileExistsError:
+                    print(f"Folder already exists: {target_path}")
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+
+                target = target_path + "\\"
+            
+                # Download the Files - Eventually Filter out so it's just the band imagery
+                download(s3.Bucket("eodata"), product, target)
+        else:
+            print("Download Aborted")
+
+class usgs_queries:
+    def __init__(self, fire_severity_object):
+        """
+        Requires a fire query object to run
+        """
+        print("")
+        print("CREATING USGS CONNECTION...")
+
+        self.fire_object = fire_severity_object
+        self.usgs_username = "eric.millan@gov.bc.ca"
+        self.usgs_password = "07231885Grant!"
+        self.service_url = "https://m2m.cr.usgs.gov/api/api/json/stable/"
+        self.landsat_dataset_name = "landsat_ot_c2_l2"
+
+
+        self.spatialFilter = {'filterType' : 'mbr',
+        'lowerLeft' : {'latitude' : self.fire_object.bottom_left_lat,
+                        'longitude' : self.fire_object.bottom_left_long},
+        'upperRight' : { 'latitude' : self.fire_object.top_right_lat,
+                        'longitude' : self.fire_object.top_right_long}}
+        
+        # Retrieve API KEY:
+        response = requests.post(f"{self.service_url}login", json={'username': self.usgs_username, 'password': self.usgs_password})
+
+        if response.status_code == 200:  # Check for successful response
+            apiKey = response.json()['data']
+            print('     Login Successful, API Key Received!')
+            self.apiKey = apiKey
+        else:
+            print("\nLogin was unsuccessful, please try again or create an account at: https://ers.cr.usgs.gov/register.")
+
+    def sendRequest(self, data, serviceURL, exitIfNoResponse = True):
+        """
+        ---- COMPLETE ----
+        Generic function for creating a post request to the USGS to query/ interact with their data. There are many ways to
+        customize this post request. The URL will need to be modified for specific actions:
+
+        eg: 
+        serviceURL + "login" =              Generates API Key, Used in the "retrieve_api_key" function
+        serviceURL + "dataset-search"       Queries the datasets
+        serviceURL + "scene-search"         Identifies Scenes (images) within datasets, Scene Filters available for time, spatial, cloud, etc
+        serviceURL + "download-options"     Identifies products available for download
+        serviceURL + "download-request"     Requests URLS for download (Some URLS returned will be 'preparing' and need to be accessed later)
+        serviceURL + "download-retrieve"    Retrieves downloads previouslys marked as 'preparing'
+        serviceURL + "logout"               Invalidates the API Key
+
+        More information here: https://m2m.cr.usgs.gov/api/docs/json/#section-issues
+
+        """
+        json_data = json.dumps(data)
+
+        if self.apiKey == None:
+            response = requests.post(serviceURL, json_data)
+        else:
+            headers = {'X-Auth-Token': self.apiKey}              
+            response = requests.post(serviceURL, json_data, headers = headers)    
+
+        try:
+            httpStatusCode = response.status_code 
+            if response == None:
+                print("No output from service")
+                if exitIfNoResponse: sys.exit()
+                else: return False
+            output = json.loads(response.text)
+            if output['errorCode'] != None:
+                print(output['errorCode'], "- ", output['errorMessage'])
+                if exitIfNoResponse: sys.exit()
+                else: return False
+            if  httpStatusCode == 404:
+                print("404 Not Found")
+                if exitIfNoResponse: sys.exit()
+                else: return False
+            elif httpStatusCode == 401: 
+                print("401 Unauthorized")
+                if exitIfNoResponse: sys.exit()
+                else: return False
+            elif httpStatusCode == 400:
+                print("Error Code", httpStatusCode)
+                if exitIfNoResponse: sys.exit()
+                else: return False
+        except Exception as e: 
+            response.close()
+            print(e)
+            if exitIfNoResponse: sys.exit()
+            else: return False
+        response.close()
+        
+        return output['data']
+
+    def pre_fire_search(self):
+        """
+        Create Data Packet for Prefire Search
+        """
+        print("     Sending Pre Fire Scene Search....")
+        
+        search_payload = {
+                'datasetName': self.landsat_dataset_name,
+                    'sceneFilter': 
+                    {'metadataFilter': 
+                        {'filterType': 'value', 'filterId': '61af9273566bb9a8','value': '9'},
+                        'spatialFilter': self.spatialFilter,
+                        'acquisitionFilter': {'start': self.fire_object.pre_fire_search_start, 'end': self.fire_object.pre_fire_search_end},
+                        'cloudCoverFilter': {'min': 0, 'max': 100}
+                    }
+                }
+                
+        results = usgs_connection.sendRequest(search_payload, self.service_url + "scene-search")
+
+        self.pre_fire_results = pd.json_normalize(results['results'])
+
+    def post_fire_search(self):
+        """
+        Create Data Packet for Prefire Search
+        """
+        print("     Sending Post Fire Scene Search....")
+        
+        search_payload = {
+                'datasetName': self.landsat_dataset_name,
+                    'sceneFilter': 
+                    {'metadataFilter': 
+                        {'filterType': 'value', 'filterId': '61af9273566bb9a8','value': '9'},
+                        'spatialFilter': self.spatialFilter,
+                        'acquisitionFilter': {'start': self.fire_object.post_fire_search_start, 'end': self.fire_object.post_fire_search_end},
+                        'cloudCoverFilter': {'min': 0, 'max': 100}
+                    }
+                }
+                
+        results = usgs_connection.sendRequest(search_payload, self.service_url + "scene-search")
+
+        print("     Compiling Results...")
+        self.post_fire_results = pd.json_normalize(results['results'])
+        self.min_cloud_cover_row = self.post_fire_results.loc[self.post_fire_results['cloudCover'].idxmin()]
+        self.post_fire_min_cloud = pd.DataFrame([self.min_cloud_cover_row])
+        self.post_fire_min_cloud = self.post_fire_min_cloud.reset_index(drop=True)
+
+        # We look for the best post-fire image we can first, and then look for a similar image from +/- 1 month the pregious year.
+        self.post_fire_scene_id = self.post_fire_min_cloud.loc[0, 'entityId']
+        self.post_fire_scene_date = self.post_fire_min_cloud.loc[0, 'temporalCoverage.startDate']
+
+    def download_post_fire_image(self):
+        """
+        """
+        print("     Preparing to Download Post Fire Imagery")
+        sceneIDs = []
+        sceneIDs.append(self.post_fire_scene_id)
+
+        download_payload = {"datasetName":self.landsat_dataset_name, 
+                    'entityIds': sceneIDs
+                    }
+
+        download_options = usgs_connection.sendRequest(download_payload, self.service_url + "download-options")
+        print("     Analysing Available Products...")
+
+        available_products = []
+        for product in download_options:
+            if product['available'] == True and product['downloadSystem'] != 'folder':
+                available_products.append({'entityId':product['entityId'], 'productId':product['id']}
+                )
+
+        request_count = len(available_products)
+        label= "test_download_request"
+        download_req_payload = {'downloads': available_products, 
+                                'label': label}
+
+        print("     Requesting Download URLs...")
+        request_results = usgs_connection.sendRequest(download_req_payload, self.service_url + "download-request")
+
+        folder = f"data/scripts/data/incoming/test_download_folder/file_{self.fire_object.fire_ID}"
+
+        if not os.path.exists(folder):
+            print("     Creaing Output Folder...")
+            os.makedirs(folder)
+        
+        # Iterate over each available download
+        for item in request_results['availableDownloads']:
+            download_url = item['url']
+            download_id = item['downloadId']
+            filename = f"{download_id}.tar"  
+            print(f"     Downloading Item {filename}")
+            
+            # Download the file
+            response = requests.get(download_url, stream=True, verify=False)
+            if response.status_code == 200:
+                file_path = os.path.join(folder, filename)
+                with open(file_path, 'wb') as file:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        file.write(chunk)
+                print(f"     Downloaded: {filename}")
+            else:
+                print(f"Failed to download file with ID: {download_id}")
+
+class image_processing:
+    """
+    """
+    def __init__(self, input_folder):
+        print("Beginning Image Processing....")
+        self.input_folder = input_folder
+        arcpy.env.overwriteOutput = True
+        arcpy.env.workspace = "W:\sry\Workarea\emillan\!Burn_Severity_FAIB\esri\workspace\workspace.gdb"
+
+        # CHECK OUT ESRI LICENSE FOR IMAGE PROCESSING
+        print("     Checking out Arcpy Spatial Analyst Extension...")        
+        class LicenseError(Exception):
+            pass
+        try:
+            if arcpy.CheckExtension("Spatial") == "Available":
+                arcpy.CheckOutExtension("Spatial")
+            else:
+                raise LicenseError
+        except:
+            print("Error")
+
+    # Function for monitoring Memory:
+    def memory_usage(self):
+        """
+        """
+        process = psutil.Process(os.getpid())
+        mem_info = process.memory_info()
+        return mem_info.rss / 1024 / 1024
+
+    def create_nbr(self, output_name):
+        """
+        """
+        if os.path.exists(output_name):
+            print("     NBR Already Exists...")
+            print("     Replacing NBR Image")
+            os.remove(output_name)
+
+        print("     Creating NBR Image")
+        nbr = arcpy.sa.RasterCalculator([self.band08_path, self.band12_path],
+                                            ["B08", "B12"], "(B08 - B12) / (B08 + B12)")
+
+        print(f"     Saving NBR Image to: {output_name}")
+        nbr.save(output_name)
+
+    def batch_imagery_analysis(self, analysis_list):
+        for item in os.listdir(self.input_folder):
+            imagery_collection_directory = os.path.join(self.input_folder, item)
+            if os.path.isdir(imagery_collection_directory):
+                # DECLARE IMAGERY TIFFS FOR SIMPLER PROCESSING
+                for root, dirs, files in os.walk(imagery_collection_directory):
+                    for file in files:
+                        try: 
+                            if file.endswith("_B01.jp2") and len(file) > 20:
+                                self.band01_path = os.path.join(root, file)
+                            if file.endswith("_B02.jp2") and len(file) > 20:
+                                self.band02_path = os.path.join(root, file)
+                            if file.endswith("_B03.jp2") and len(file) > 20:
+                                self.band03_path = os.path.join(root, file)
+                            if file.endswith("_B04.jp2") and len(file) > 20:
+                                self.band04_path = os.path.join(root, file)
+                            if file.endswith("_B05.jp2") and len(file) > 20:
+                                self.band05_path = os.path.join(root, file)
+                            if file.endswith("_B06.jp2") and len(file) > 20:
+                                self.band06_path = os.path.join(root, file)
+                            if file.endswith("_B07.jp2") and len(file) > 20:
+                                self.band07_path = os.path.join(root, file)
+                            if file.endswith("_B08.jp2") and len(file) > 20:
+                                self.band08_path = os.path.join(root, file)
+                            if file.endswith("_B09.jp2") and len(file) > 20:
+                                self.band09_path = os.path.join(root, file)
+                            if file.endswith("_B10.jp2") and len(file) > 20:
+                                self.band10_path = os.path.join(root, file)
+                            if file.endswith("_B11.jp2") and len(file) > 20:
+                                self.band11_path = os.path.join(root, file)
+                            if file.endswith("_B12.jp2") and len(file) > 20:
+                                self.band12_path = os.path.join(root, file)
+                        except:
+                            print("COULDN'T FIND ALL THE IMAGERY - SCRIPT ABORTED")
+                    
+                    if "nbr" in analysis_list:
+                        print(f"Memory Usage: {self.memory_usage()} MB")
+                        output_name = f"{root}\\NBR"
+                        self.create_nbr(output_name=output_name)
+
+                    else:
+                        print("Error Creating NBR Image")
+
+
+
+# %% --------- MAIN SCRIPT AREA -----------------------------------------------------
+fire_query = fire_severity_analysis("G41493")
+p_lab_client = planet_lab_queries(fire_query)
+p_lab_client.search_sentinel_imagery(pre_or_post = "post")
+p_lab_client.download_sentinel_imagery()
+
+# %% - Input Folder will eventually be "p_lab_client.new_folder_path", it is hard coded for testing/dev
+image_processing = image_processing(input_folder="data/SentinelQueryResults/G41493_20240821_151716")
+
+# %%
+image_processing.batch_imagery_analysis(analysis_list = ["nbr"])
