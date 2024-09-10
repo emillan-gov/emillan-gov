@@ -1,3 +1,6 @@
+
+
+
 #%%
 """
 Code Mostly based on example here:
@@ -156,8 +159,8 @@ class usgs_queries:
         print("CREATING USGS CONNECTION...")
 
         self.fire_object = fire_severity_object
-        self.usgs_username = "eric.millan@gov.bc.ca"
-        self.usgs_password = "07231885Grant!"
+        self.usgs_username = ""
+        self.usgs_password = ""
         self.service_url = "https://m2m.cr.usgs.gov/api/api/json/stable/"
         self.landsat_dataset_name = "landsat_ot_c2_l2"
 
