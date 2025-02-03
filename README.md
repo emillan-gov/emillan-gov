@@ -4,7 +4,7 @@ Hello! I'm a Geospatial Analyst based in British Columbia, Canada, where I have 
 
 📊 What I Do
 
-I specialize in designing and implementing data collection tools, including surveys and field collection apps, as well as creating insightful Web Mapping solutions and Dashboards. My expertise extends to developing ETL (Extract, Transform, Load) processes and I have a keen interest in automating processes to enhance efficiency and accuracy in our projects.
+I specialize in designing and implementing data collection tools, including surveys and field collection apps, as well as creating insightful Web Mapping solutions and Dashboards. My expertise extends to database design and developing ETL (Extract, Transform, Load) processes.
 
 🌿 Collaboration and Conservation
 
