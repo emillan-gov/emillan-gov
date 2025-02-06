@@ -1,3 +1,9 @@
+---
+layout: default
+title: "Projects"
+permalink: /projects/
+---
+
 <h1>My Projects</h1>
 
 <div class="projects-grid">
