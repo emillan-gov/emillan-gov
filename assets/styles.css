@@ -174,6 +174,28 @@ html, body {
     flex-shrink: 0;
 }
 
+/* Left section - Name & credits */
+.footer-left {
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* Right section - Logo */
+.footer-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    max-width: 150px; /* Prevents it from stretching */
+}
+
+/* Logo Styling */
+.footer-logo {
+    width: 120px; /* Set a max width */
+    height: auto;
+    max-height: 50px; /* Prevents excessive height */
+    object-fit: contain;
+}
+
 /* ============================== */
 /*          Projects Grid         */
 /* ============================== */
