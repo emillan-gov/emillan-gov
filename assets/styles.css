@@ -144,6 +144,21 @@ em, i {
 /* ============================== */
 /*            Footer              */
 /* ============================== */
+/* Make sure the page takes up the full viewport height */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main content should expand to push the footer down */
+.container {
+    flex: 1;
+}
+
+/* Footer Styles */
 .site-footer {
     background-color: #0A1931; /* Dark Navy Blue */
     color: white;
@@ -157,26 +172,6 @@ em, i {
     left: 0;
     box-sizing: border-box;
     flex-shrink: 0;
-}
-
-/* Left section - Name & credits */
-.footer-left {
-    font-size: 14px;
-    white-space: nowrap;
-}
-
-/* Right section - Logo */
-.footer-right {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    max-width: 30%;
-}
-
-.footer-logo {
-    width: 120px;
-    height: auto;
-    max-width: 100%;
 }
 
 /* ============================== */
