@@ -8,11 +8,7 @@
 </head>
 <body>
 
-    <div class="navbar">
-        <a href="{{ '/' | relative_url }}">Home</a>
-        <a href="{{ '/projects/' | relative_url }}">Projects</a>
-        <a href="{{ '/about/' | relative_url }}">About</a>
-    </div>
+    {% include navbar.html %}
 
     <div class="container">
         {{ content }}
