@@ -6,6 +6,7 @@ description: "A simple survey app using Flask and PostgreSQL."
 image: "/assets/project_images/pine.PNG"
 stack:
 - python
+- postgresql
 github: "/assets/project_images/pine.PNG"
 ---
 
