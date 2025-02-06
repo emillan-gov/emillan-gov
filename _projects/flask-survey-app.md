@@ -3,7 +3,7 @@ layout: project
 title: "Flask Survey App"
 date: 2025-02-06
 description: "A simple survey app using Flask and PostgreSQL."
-image: "{{ '/assets/BCID_H_gry_rev.png' | relative_url }}"
+image: "/assets/BCID_H_gry_rev.png"
 stack:
 - python
 github: "/assets/project_images/pine.PNG"
