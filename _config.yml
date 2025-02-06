@@ -1,16 +1,13 @@
-title: "My Documentation"
-theme: "just-the-docs"
-
-# Enable the search function
-search_enabled: true
-
-# Navigation settings
-nav_order: 1
-permalink: pretty
+title: "My GitHub Portfolio"
+description: "GIS, Web Development, and Open Source Projects"
 
 # URL settings (important for private repositories)
 baseurl: "/emillan-gov"  # Change this if your repo name is different
 url: "https://emillan-gov.github.io"
+theme: minima
+
+# Enable the search function
+search_enabled: true
 
 collections:
   projects:
