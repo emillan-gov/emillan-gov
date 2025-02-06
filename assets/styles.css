@@ -1,3 +1,52 @@
+@font-face {
+    font-family: 'BC Sans';
+    src: url('/assets/fonts/2023_01_01_BCSans-Regular_2f.woff2') format('woff2'),
+         url('/assets/fonts/2023_01_01_BCSans-Regular_2f.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'BC Sans';
+    src: url('/assets/fonts/2023_01_01_BCSans-Bold_2f.woff2') format('woff2'),
+         url('/assets/fonts/2023_01_01_BCSans-Bold_2f.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'BC Sans';
+    src: url('/assets/fonts/2023_01_01_BCSans-Italic_2f.woff2') format('woff2'),
+         url('/assets/fonts/2023_01_01_BCSans-Italic_2f.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'BC Sans';
+    src: url('/assets/fonts/2023_01_01_BCSans-BoldItalic_2f.woff2') format('woff2'),
+         url('/assets/fonts/2023_01_01_BCSans-BoldItalic_2f.woff') format('woff');
+    font-weight: 700;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'BC Sans';
+    src: url('/assets/fonts/2023_01_01_BCSans-Light_2f.woff2') format('woff2'),
+         url('/assets/fonts/2023_01_01_BCSans-Light_2f.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'BC Sans';
+    src: url('/assets/fonts/2023_01_01_BCSans-LightItalic_2f.woff2') format('woff2'),
+         url('/assets/fonts/2023_01_01_BCSans-LightItalic_2f.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+}
+
+
 /* Sticky footer setup */
 html, body {
     height: 100%;
