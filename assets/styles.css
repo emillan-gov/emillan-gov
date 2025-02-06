@@ -61,7 +61,7 @@ html, body {
 /* Right section - Logo */
 .footer-right {
     display: flex;
-    align-items: center;
+    align-items: right;
 }
 
 .footer-logo {
