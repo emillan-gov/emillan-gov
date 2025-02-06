@@ -202,7 +202,7 @@ html, body {
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Two columns on wide screens */
-    gap: 40px;
+    gap: 80px;
     margin-top: 20px;
     justify-content: center;
 }
@@ -292,14 +292,14 @@ html, body {
 @media (max-width: 1024px) {
     .projects-grid {
         grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Adjust columns for medium screens */
-        gap: 30px; /* Ensures proper spacing */
+        gap: 50px; /* Ensures proper spacing */
     }
 }
 
 @media (max-width: 768px) {
     .projects-grid {
         grid-template-columns: 1fr; /* Single column on smaller screens */
-        gap: 20px;
+        gap: 50px;
     }
 
     .project-card {
