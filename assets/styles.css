@@ -25,29 +25,7 @@ h1, h2 {
     margin: 0 15px;
 }
 
-.site-footer {
-    background-color: #0A1931; /* Dark Navy Blue */
-    color: white;
-    text-align: center;
-    padding: 20px;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-
-.footer-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.footer-logo {
-    width: 120px; /* Adjust size as needed */
-    margin-bottom: 10px;
-}
-
-/* Ensure the page takes at least the full height of the viewport */
+/* Sticky footer setup */
 html, body {
     height: 100%;
     margin: 0;
@@ -58,16 +36,35 @@ html, body {
 
 /* Main content should expand to push the footer down */
 .container {
-    flex: 1; /* Pushes the footer to the bottom */
+    flex: 1;
 }
 
-/* Sticky footer */
+/* Footer styles */
 .site-footer {
     background-color: #0A1931; /* Dark Navy Blue */
     color: white;
-    padding: 20px 50px;
+    padding: 20px 40px;
     width: 100%;
-    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Text on left, logo on right */
+    position: relative;
     bottom: 0;
     left: 0;
+}
+
+/* Left section - Name & credits */
+.footer-left {
+    font-size: 14px;
+}
+
+/* Right section - Logo */
+.footer-right {
+    display: flex;
+    align-items: center;
+}
+
+.footer-logo {
+    width: 120px; /* Adjust size as needed */
+    height: auto;
 }
