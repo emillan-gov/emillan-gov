@@ -1,3 +1,6 @@
+/* ============================== */
+/*         Custom Font Setup      */
+/* ============================== */
 @font-face {
     font-family: 'BC Sans';
     src: url('/assets/fonts/2023_01_01_BCSans-Regular_2f.woff2') format('woff2'),
@@ -38,50 +41,48 @@
     font-style: normal;
 }
 
-@font-face {
-    font-family: 'BC Sans';
-    src: url('/assets/fonts/2023_01_01_BCSans-LightItalic_2f.woff2') format('woff2'),
-         url('/assets/fonts/2023_01_01_BCSans-LightItalic_2f.woff') format('woff');
-    font-weight: 300;
-    font-style: italic;
-}
-
-/* Apply BC Sans as the default font */
+/* ============================== */
+/*           Global Styles        */
+/* ============================== */
 body {
     font-family: 'BC Sans', sans-serif;
     font-weight: 400;
     font-style: normal;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
+    color: #333;
 }
 
-/* Use bold variation for headings */
+/* Headings & Typography */
 h1, h2, h3 {
     font-weight: 700;
 }
 
-/* Italic styles */
 em, i {
     font-style: italic;
 }
 
-/* Sticky footer setup */
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    overflow-x: hidden; /* Prevents horizontal scroll */
+/* Main content container */
+.container {
+    flex: 1;
+    width: 80%;
+    margin: auto;
+    max-width: 1200px;
+    overflow: hidden;
 }
 
-/* Navbar styles */
+/* ============================== */
+/*            Navbar              */
+/* ============================== */
 .site-navbar {
-    background-color: #0A1931; /* Dark Navy Blue */
+    background-color: #0A1931;
     color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 15px 40px;
-    border-bottom: 4px solid #E3A82B; /* Thin gold accent */
+    border-bottom: 4px solid #E3A82B;
 }
 
 /* Left section: Logo + Title */
@@ -91,7 +92,7 @@ html, body {
 }
 
 .navbar-logo img {
-    width: 150px; /* Adjust size */
+    width: 150px;
     height: auto;
     margin-right: 15px;
 }
@@ -117,7 +118,7 @@ html, body {
 }
 
 .navbar-links a:hover {
-    color: #E3A82B; /* Gold hover effect */
+    color: #E3A82B;
 }
 
 /* Right section: Icons + Login */
@@ -137,64 +138,46 @@ html, body {
     color: #E3A82B;
 }
 
-/* Mobile-friendly */
-@media (max-width: 768px) {
-    .navbar-links {
-        display: none; /* Hide menu on mobile */
-    }
-    .navbar-menu {
-        display: block; /* Show menu button */
-    }
-}
-
-
-/* Main content should expand to push the footer down */
-.container {
-    flex: 1;
-    width: 80%;
-    margin: auto;
-    max-width: 1200px; /* Prevents excessive width */
-    overflow: hidden;
-}
-
-/* Footer styles */
+/* ============================== */
+/*            Footer              */
+/* ============================== */
 .site-footer {
-    background-color: #0A1931; /* Dark Navy Blue */
+    background-color: #0A1931;
     color: white;
     padding: 20px 40px;
     width: 100%;
-    max-width: 100vw; /* Ensures it does not overflow */
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Text on left, logo on right */
+    justify-content: space-between;
     position: relative;
     bottom: 0;
     left: 0;
-    box-sizing: border-box; /* Prevents padding from increasing width */
+    box-sizing: border-box;
 }
 
 /* Left section - Name & credits */
 .footer-left {
     font-size: 14px;
-    white-space: nowrap; /* Prevents text wrapping */
+    white-space: nowrap;
 }
 
 /* Right section - Logo */
 .footer-right {
     display: flex;
-    justify-content: flex-end; /* Ensures it aligns properly */
+    justify-content: flex-end;
     align-items: center;
-    max-width: 30%; /* Ensures it does not push content */
+    max-width: 30%;
 }
 
-/* Logo styling */
 .footer-logo {
-    width: 120px; /* Adjust size as needed */
+    width: 120px;
     height: auto;
     max-width: 100%;
 }
 
-/* Grid Layout */
+/* ============================== */
+/*          Projects Grid         */
+/* ============================== */
 .projects-grid {
     display: flex;
     flex-direction: column;
@@ -279,8 +262,17 @@ html, body {
     color: #E3A82B;
 }
 
-/* Responsive Design */
+/* ============================== */
+/*         Responsive Fixes       */
+/* ============================== */
 @media (max-width: 768px) {
+    .navbar-links {
+        display: none;
+    }
+    .navbar-menu {
+        display: block;
+    }
+
     .project-card {
         flex-direction: column;
         text-align: center;
@@ -295,3 +287,4 @@ html, body {
         width: 100%;
     }
 }
+
