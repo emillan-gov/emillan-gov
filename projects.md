@@ -1,9 +1,3 @@
----
-layout: default
-title: "Projects"
-permalink: /projects/
----
-
 <h1>My Projects</h1>
 
 <div class="projects-grid">
@@ -12,6 +6,7 @@ permalink: /projects/
       <div class="project-info">
         <h2>{{ project.title }}</h2>
         <p>{{ project.description }}</p>
+        <p><strong>📂 Image Path Debug:</strong> {{ project.image }}</p> <!-- Debugging -->
         <div class="project-stack">
           {% for tech in project.stack %}
             <img src="/assets/icons/{{ tech }}.png" alt="{{ tech }}" class="stack-icon">
