@@ -3,7 +3,7 @@ layout: project
 title: "Flask Survey App"
 date: 2025-02-06
 description: "A simple survey app using Flask and PostgreSQL."
-image: "/assets/project_images/5np_image.PNG"
+image: "/assets/project_images/5np_image.png"
 stack:
 - python
 github: "https://github.com/your-username/flask-survey-app"
