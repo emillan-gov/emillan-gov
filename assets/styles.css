@@ -8,6 +8,81 @@ html, body {
     overflow-x: hidden; /* Prevents horizontal scroll */
 }
 
+/* Navbar styles */
+.site-navbar {
+    background-color: #0A1931; /* Dark Navy Blue */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 40px;
+    border-bottom: 4px solid #E3A82B; /* Thin gold accent */
+}
+
+/* Left section: Logo + Title */
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo img {
+    width: 150px; /* Adjust size */
+    height: auto;
+    margin-right: 15px;
+}
+
+.navbar-title {
+    font-size: 22px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Center section: Navigation links */
+.navbar-links {
+    display: flex;
+    gap: 20px;
+}
+
+.navbar-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+.navbar-links a:hover {
+    color: #E3A82B; /* Gold hover effect */
+}
+
+/* Right section: Icons + Login */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-icon, .navbar-menu {
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.navbar-icon:hover, .navbar-menu:hover {
+    color: #E3A82B;
+}
+
+/* Mobile-friendly */
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none; /* Hide menu on mobile */
+    }
+    .navbar-menu {
+        display: block; /* Show menu button */
+    }
+}
+
+
 /* Main content should expand to push the footer down */
 .container {
     flex: 1;
