@@ -46,6 +46,22 @@
     font-style: italic;
 }
 
+/* Apply BC Sans as the default font */
+body {
+    font-family: 'BC Sans', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Use bold variation for headings */
+h1, h2, h3 {
+    font-weight: 700;
+}
+
+/* Italic styles */
+em, i {
+    font-style: italic;
+}
 
 /* Sticky footer setup */
 html, body {
