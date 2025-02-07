@@ -123,7 +123,10 @@ body {
 .main-content {
     flex: 1;
     overflow-y: auto; /* Allows scrolling */
-    padding-bottom: 80px; /* Prevents overlap with the fixed footer */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 80px; /* Prevents overlap with footer */
 }
 
 /* Left section - Name & credits */
@@ -153,13 +156,14 @@ body {
 /* ============================== */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Two-column layout */
-    gap: 50px; /* Ensures equal spacing */
-    margin-top: 20px;
+    grid-template-columns: repeat(2, minmax(300px, 1fr)); /* Exactly 2 columns */
+    gap: 50px;
     padding: 20px;
     justify-content: center;
     overflow-y: auto; /* Enables scrolling */
     flex-grow: 1;
+    max-width: 1200px; /* Prevents overly wide grids */
+    margin: auto;
 }
 
 /* Project Cards */
