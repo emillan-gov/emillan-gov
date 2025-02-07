@@ -25,67 +25,42 @@
     font-style: italic;
 }
 
-@font-face {
-    font-family: 'BC Sans';
-    src: url('/assets/fonts/2023_01_01_BCSans-BoldItalic_2f.woff2') format('woff2'),
-         url('/assets/fonts/2023_01_01_BCSans-BoldItalic_2f.woff') format('woff');
-    font-weight: 700;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'BC Sans';
-    src: url('/assets/fonts/2023_01_01_BCSans-Light_2f.woff2') format('woff2'),
-         url('/assets/fonts/2023_01_01_BCSans-Light_2f.woff') format('woff');
-    font-weight: 300;
-    font-style: normal;
-}
-
 /* ============================== */
 /*           Global Styles        */
 /* ============================== */
-body {
-    font-family: 'BC Sans', sans-serif;
-    font-weight: 400;
-    font-style: normal;
+html, body {
     height: 100%;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Prevents unwanted horizontal scroll */
     background: #f4f4f4;
     color: #333;
-}
-
-/* Headings & Typography */
-h1, h2, h3 {
-    font-weight: 700;
-}
-
-em, i {
-    font-style: italic;
-}
-
-/* Main content container */
-.container {
-    flex: 1;
-    width: 80%;
-    margin: auto;
-    max-width: 1200px;
-    overflow: hidden;
+    font-family: 'BC Sans', sans-serif;
 }
 
 /* ============================== */
 /*            Navbar              */
 /* ============================== */
 .site-navbar {
-    background-color: #0A1931;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #0A1931; /* Dark Navy Blue */
     color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 15px 40px;
     border-bottom: 4px solid #E3A82B;
+    z-index: 1000; /* Ensures it stays on top */
+}
+
+/* Push content below navbar */
+body {
+    padding-top: 80px; /* Adjust this based on navbar height */
 }
 
 /* Left section: Logo + Title */
@@ -124,48 +99,11 @@ em, i {
     color: #E3A82B;
 }
 
-/* Right section: Icons + Login */
-.navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.navbar-icon, .navbar-menu {
-    color: white;
-    font-size: 20px;
-    text-decoration: none;
-}
-
-.navbar-icon:hover, .navbar-menu:hover {
-    color: #E3A82B;
-}
-
 /* ============================== */
 /*            Footer              */
 /* ============================== */
-/* Make sure the page takes up the full viewport height */
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    overflow-x: hidden;
-}
-
-/* Main content should expand to push the footer down */
-.container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    min-height: 100vh; /* Ensures the content fills the screen */
-    padding-bottom: 80px; /* Prevents overlap with the footer */
-}
-/* Footer Styles */
 .site-footer {
-    position: relative;
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -176,7 +114,14 @@ html, body {
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
-    flex-shrink: 0;
+    z-index: 1000; /* Keeps footer above content */
+}
+
+/* Push content above footer */
+.main-content {
+    flex: 1;
+    overflow-y: auto; /* Allows scrolling */
+    padding-bottom: 80px; /* Prevents overlap with the fixed footer */
 }
 
 /* Left section - Name & credits */
@@ -190,14 +135,14 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    max-width: 150px; /* Prevents it from stretching */
+    max-width: 150px;
 }
 
 /* Logo Styling */
 .footer-logo {
-    width: 120px; /* Set a max width */
+    width: 120px;
     height: auto;
-    max-height: 50px; /* Prevents excessive height */
+    max-height: 50px;
     object-fit: contain;
 }
 
@@ -207,10 +152,12 @@ html, body {
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Two-column layout */
-    gap: 50px; /* Ensures equal spacing between cards */
-    margin: 50px auto; /* Creates equal space above & below */
-    padding: 20px; /* Adds padding inside grid */
+    gap: 50px; /* Ensures equal spacing */
+    margin-top: 20px;
+    padding: 20px;
     justify-content: center;
+    overflow-y: auto; /* Enables scrolling */
+    flex-grow: 1;
 }
 
 /* Project Cards */
@@ -225,7 +172,7 @@ html, body {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 600px; /* Prevents cards from becoming too wide */
+    max-width: 600px;
     margin: auto;
 }
 
@@ -297,15 +244,15 @@ html, body {
 /* ============================== */
 @media (max-width: 1024px) {
     .projects-grid {
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Adjust columns for medium screens */
-        gap: 50px; /* Ensures proper spacing */
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Adjust for medium screens */
+        gap: 40px;
     }
 }
 
 @media (max-width: 768px) {
     .projects-grid {
         grid-template-columns: 1fr; /* Single column on smaller screens */
-        gap: 50px;
+        gap: 30px;
     }
 
     .project-card {
