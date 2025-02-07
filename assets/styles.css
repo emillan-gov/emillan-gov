@@ -258,7 +258,6 @@ body {
 @media (max-width: 768px) {
     .projects-grid {
         grid-template-columns: 1fr; /* Single column on smaller screens */
-        gap: 30px;
     }
 
     .project-card {
