@@ -201,9 +201,10 @@ html, body {
 /* ============================== */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Two columns on wide screens */
-    gap: 80px;
-    margin-top: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Two-column layout */
+    gap: 50px; /* Ensures equal spacing between cards */
+    margin: 50px auto; /* Creates equal space above & below */
+    padding: 20px; /* Adds padding inside grid */
     justify-content: center;
 }
 
