@@ -155,21 +155,22 @@ html, body {
 
 /* Main content should expand to push the footer down */
 .container {
-    flex: 1;
+    flex: 1; /* Expands content to push the footer down */
+    padding-bottom: 60px; /* Prevents overlap with footer */
 }
 
 /* Footer Styles */
 .site-footer {
-    background-color: #0A1931; /* Dark Navy Blue */
-    color: white;
-    padding: 20px 40px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     position: relative;
     bottom: 0;
     left: 0;
+    width: 100%;
+    background-color: #0A1931; /* Dark Navy Blue */
+    color: white;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     box-sizing: border-box;
     flex-shrink: 0;
 }
