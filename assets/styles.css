@@ -34,7 +34,7 @@ html, body {
     padding: 0;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Prevents unwanted horizontal scroll */
+    overflow: hidden; /* Prevents unwanted scrollbars */
     background: #f4f4f4;
     color: #333;
     font-family: 'BC Sans', sans-serif;
@@ -52,7 +52,7 @@ html, body {
     color: white;
     display: flex;
     align-items: center;
-    height: 50px;
+    height: 80px; /* Increased height to accommodate full title */
     justify-content: space-between;
     padding: 15px 40px;
     border-bottom: 6px solid #E3A82B;
@@ -61,7 +61,7 @@ html, body {
 
 /* Push content below navbar */
 body {
-    padding-top: 80px; /* Adjust this based on navbar height */
+    padding-top: 80px; /* Matches the navbar height */
 }
 
 /* Left section: Logo + Title */
@@ -80,6 +80,7 @@ body {
     font-size: 22px;
     font-weight: bold;
     text-transform: uppercase;
+    white-space: nowrap; /* Prevents the title from wrapping */
 }
 
 /* Center section: Navigation links */
@@ -98,6 +99,25 @@ body {
 
 .navbar-links a:hover {
     color: #E3A82B;
+}
+
+/* Hamburger menu styles for mobile */
+.nav-toggle {
+    display: none;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    height: 3px;
+    width: 25px;
+    background: white;
+    margin: 4px 0;
+    transition: 0.4s;
 }
 
 /* ============================== */
@@ -119,36 +139,17 @@ body {
     z-index: 1000; /* Keeps footer above content */
 }
 
-/* Push content above footer */
+/* ============================== */
+/*          Main Content          */
+/* ============================== */
 .main-content {
-    flex: 1;
-    overflow-y: auto; /* Allows scrolling */
+    height: calc(100vh - 80px - 50px); /* Viewport height minus header and footer */
+    overflow-y: auto; /* Enables vertical scrolling when content overflows */
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 80px; /* Prevents overlap with footer */
-}
-
-/* Left section - Name & credits */
-.footer-left {
-    font-size: 14px;
-    white-space: nowrap;
-}
-
-/* Right section - Logo */
-.footer-right {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    max-width: 150px;
-}
-
-/* Logo Styling */
-.footer-logo {
-    width: 120px;
-    height: auto;
-    max-height: 50px;
-    object-fit: contain;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 /* ============================== */
@@ -160,7 +161,6 @@ body {
     gap: 50px;
     padding: 20px;
     justify-content: center;
-    overflow-y: auto; /* Enables scrolling */
     flex-grow: 1;
     max-width: 1200px; /* Prevents overly wide grids */
     margin: auto;
@@ -256,8 +256,29 @@ body {
 }
 
 @media (max-width: 768px) {
+    /* Navbar adjustments for mobile */
+    .navbar-links {
+        display: none;
+        position: absolute;
+        top: 80px;
+        right: 0;
+        background: #0A1931;
+        flex-direction: column;
+        width: 200px;
+        padding: 10px;
+        z-index: 1001;
+    }
+    .hamburger {
+        display: flex;
+    }
+    /* When the nav-toggle checkbox is checked, show the navbar links */
+    .nav-toggle:checked + .hamburger + .navbar-links {
+        display: flex;
+    }
+
+    /* Projects grid: single column on smaller screens */
     .projects-grid {
-        grid-template-columns: 1fr; /* Single column on smaller screens */
+        grid-template-columns: 1fr;
     }
 
     .project-card {
