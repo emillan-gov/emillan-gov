@@ -196,6 +196,7 @@ body {
     flex-grow: 1;
     max-width: 1200px; /* Prevents overly wide grids */
     margin: auto;
+    overflow-y: auto;
 }
 
 /* Project Cards */
