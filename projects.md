@@ -4,7 +4,7 @@ title: "Projects"
 permalink: /projects/
 ---
 
-<h1>My Projects</h1>
+<h1  style="text-align:center;>My Projects</h1>
 
 <div class="projects-grid">
   {% for project in site.projects %}
