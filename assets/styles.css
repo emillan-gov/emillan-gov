@@ -1,3 +1,5 @@
+This is what my current CSS looks like. Can you make the changes so I can replace the file?
+
 /* ============================== */
 /*         Custom Font Setup      */
 /* ============================== */
@@ -61,6 +63,86 @@ html, body {
     box-sizing: border-box; /* Includes padding and border in the width */
 }
 
+/* Left section: Logo + Title */
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-logo img {
+    width: 150px;
+    height: auto;
+    margin-right: 15px;
+}
+
+.navbar-title {
+    font-size: 22px;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap; /* Prevents the title from wrapping */
+}
+
+/* Center section: Navigation links */
+.navbar-links {
+    display: flex;
+    gap: 20px;
+    overflow: hidden; /* Prevents links from overflowing */
+}
+
+.navbar-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 16px;
+    white-space: nowrap; /* Ensures text doesn't wrap */
+}
+
+.navbar-links a:hover {
+    color: #E3A82B;
+}
+
+/* Push content below navbar */
+body {
+    padding-top: 80px; /* Matches the navbar height */
+    padding-bottom: 80px; /*Matches the sticky footer height */
+}
+
+/* Hamburger menu styles for mobile */
+.nav-toggle {
+    display: none;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    height: 3px;
+    width: 25px;
+    background: white;
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+.navbar-links a {
+    color: white;
+    text-decoration: none; /* No underline normally */
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 16px;
+    transition: color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+}
+
+.navbar-links a:hover, .navbar-links a:focus { /* Focus for keyboard navigation */
+    color: #E3A82B; /* Highlight color */
+    text-decoration: underline; /* Adds underline on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+
 /* ============================== */
 /*            Footer              */
 /* ============================== */
@@ -80,19 +162,26 @@ html, body {
     z-index: 1000; /* Keeps footer above content */
 }
 
+/* Styling for the logo inside the footer */
+.footer-right img {
+    max-height: 80px; /* Limits the height of the logo */
+    width: auto; /* Maintains aspect ratio */
+    margin-right: 15px; /* Provides some spacing if next to text or another element */
+}
+
+
 /* ============================== */
 /*          Main Content          */
 /* ============================== */
 .main-content {
-    padding-top: 80px; /* equal to navbar height */
-    margin-top: 80px; /* ensure it starts below the navbar */
-    padding-bottom: 80px; /* equal to footer height */
-    flex-grow: 1; /* takes available space */
-    overflow-y: auto; /* enables vertical scroll */
+    height: calc(100vh - 80px - 80px); /* Viewport height minus header and footer */
+    overflow-y: auto; /* Enables vertical scrolling when content overflows */
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-sizing: border-box; /* includes padding in height calculation */
+    padding-top: 80px;
+    padding-bottom: 80px;
+    box-sizing: border-box;
 }
 
 /* ============================== */
@@ -100,33 +189,142 @@ html, body {
 /* ============================== */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Adjusted for three columns, change as necessary */
-    gap: 20px;
-    width: 100%;
-    max-width: 1200px; /* Limits the maximum width of the grid */
+    grid-template-columns: repeat(2, minmax(300px, 1fr)); /* Exactly 2 columns */
+    gap: 50px;
     padding: 20px;
-    margin: 0 auto; /* Centers the grid horizontally */
+    justify-content: center;
+    flex-grow: 1;
+    max-width: 1200px; /* Prevents overly wide grids */
+    margin: auto;
 }
 
+/* Project Cards */
 .project-card {
-    background: #FFF;
-    border: 1px solid #ccc;
+    background: white;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    overflow: hidden; /* Ensures contents do not spill out */
-    transition: transform 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s ease-in-out;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
 }
 
 .project-card:hover {
     transform: translateY(-5px);
 }
 
-/* Ensure adjustments for various display sizes */
-@media (max-width: 768px) {
+/* Left Side: Project Info */
+.project-info {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.project-info h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #234075;
+}
+
+.project-info p {
+    font-size: 16px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Tech Stack Icons */
+.project-stack {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.stack-icon {
+    width: 30px;
+    height: 30px;
+}
+
+/* Right Side: Project Image */
+.project-image-container {
+    flex-shrink: 0;
+    width: 250px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-image {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 6px;
+}
+
+/* Project Link */
+.project-link {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #234075;
+}
+
+.project-link:hover {
+    color: #E3A82B;
+}
+
+/* ============================== */
+/*         Responsive Fixes       */
+/* ============================== */
+@media (max-width: 1024px) {
     .projects-grid {
-        grid-template-columns: 1fr; /* Full width on smaller screens */
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Adjust for medium screens */
+        gap: 40px;
     }
 }
 
-/* Additional responsive settings as required */
+@media (max-width: 768px) {
+    /* Navbar adjustments for mobile */
+    .navbar-links {
+        display: none;
+        position: absolute;
+        top: 80px;
+        right: 0;
+        background: #0A1931;
+        flex-direction: column;
+        width: 200px;
+        padding: 10px;
+        z-index: 1001;
+    }
+    .hamburger {
+        display: flex;
+    }
+    /* When the nav-toggle checkbox is checked, show the navbar links */
+    .nav-toggle:checked + .hamburger + .navbar-links {
+        display: flex;
+    }
 
+    /* Projects grid: single column on smaller screens */
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .project-card {
+        flex-direction: column;
+        text-align: center;
+        max-width: 100%;
+    }
+
+    .project-info {
+        padding-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .project-image-container {
+        width: 100%;
+    }
+}
