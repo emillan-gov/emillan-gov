@@ -190,12 +190,12 @@ body {
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(300px, 1fr)); /* Exactly 2 columns */
-    height: calc(100vh - 400px); /* Viewport height minus header and footer */
+    height: calc(100vh - 300px); /* Viewport height minus header and footer */
     gap: 50px;
     padding: 20px;
     justify-content: center;
     flex-grow: 1;
-    max-width: 1200px; /* Prevents overly wide grids */
+    max-width: 90%; /* Prevents overly wide grids */
     margin: auto;
     overflow-y: auto;
 }
