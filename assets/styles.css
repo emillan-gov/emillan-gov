@@ -103,6 +103,7 @@ html, body {
 /* Push content below navbar */
 body {
     padding-top: 80px; /* Matches the navbar height */
+    padding-bottom: 80px; /*Matches the sticky footer height */
 }
 
 /* Hamburger menu styles for mobile */
@@ -148,7 +149,7 @@ body {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 100px; /* Adjusted height to better fit contents */
+    height: 80px; /* Adjusted height to better fit contents */
     background-color: #0A1931; /* Dark Navy Blue */
     color: white;
     padding: 10px 40px; /* Reduced vertical padding */
