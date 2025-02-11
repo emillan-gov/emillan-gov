@@ -174,13 +174,13 @@ body {
 /*          Main Content          */
 /* ============================== */
 .main-content {
-    height: calc(100vh - 80px - 80px); /* Viewport height minus header and footer */
+    flex: 1; 
+    height: calc(100vh - 160px); /* Viewport height minus header and footer */
     overflow-y: auto; /* Enables vertical scrolling when content overflows */
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 80px;
-    padding-bottom: 80px;
+    padding: 20px 0;
     box-sizing: border-box;
 }
 
