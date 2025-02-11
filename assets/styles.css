@@ -148,15 +148,22 @@ body {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 50px;
+    height: 100px; /* Adjusted height to better fit contents */
     background-color: #0A1931; /* Dark Navy Blue */
     color: white;
-    padding: 20px 40px;
+    padding: 10px 40px; /* Reduced vertical padding */
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-sizing: border-box;
     z-index: 1000; /* Keeps footer above content */
+}
+
+/* Styling for the logo inside the footer */
+.footer-logo img {
+    max-height: 80px; /* Limits the height of the logo */
+    width: auto; /* Maintains aspect ratio */
+    margin-right: 15px; /* Provides some spacing if next to text or another element */
 }
 
 /* ============================== */
