@@ -176,7 +176,6 @@ body {
 .main-content {
     flex: 1; 
     height: calc(100vh - 160px); /* Viewport height minus header and footer */
-    overflow-y: auto; /* Enables vertical scrolling when content overflows */
     display: flex;
     flex-direction: column;
     align-items: center;
