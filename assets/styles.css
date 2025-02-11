@@ -190,6 +190,7 @@ body {
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(300px, 1fr)); /* Exactly 2 columns */
+    height: calc(100vh - 160px); /* Viewport height minus header and footer */
     gap: 50px;
     padding: 20px;
     justify-content: center;
