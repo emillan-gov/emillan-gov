@@ -193,18 +193,23 @@ h1 {
 /* ============================== */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Ensures flexible column layout */
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Flexible column layout */
     grid-auto-rows: auto; /* Allows rows to expand dynamically */
-    gap: 50px; /* Increased gap between project cards */
+    gap: 50px; /* Ensures space between project cards */
     padding: 20px;
     max-width: 95%; /* Prevents grid from stretching too wide */
-    margin: 0 auto; /* Centers the grid and keeps consistent spacing */
-    align-items: start; /* Ensures cards align at the top */
+    margin: 0 auto; /* Centers the grid */
 
-    /* Enables scrolling for overflowing content */
+    /* Scroll Fixes */
     max-height: calc(100vh - 300px); /* Prevents grid from growing beyond viewport */
-    overflow-y: auto; /* Allows vertical scrolling when necessary */
-    overflow-x: hidden;
+    overflow-y: auto; /* Allows vertical scrolling */
+    overflow-x: hidden; /* Disables horizontal scrolling */
+    white-space: normal; /* Ensures text doesn't force overflow */
+}
+
+/* Prevents the entire page from horizontal scrolling */
+body {
+    overflow-x: hidden; /* Removes horizontal scroll from the entire page */
 }
 
 /* Project Cards (Horizontal Layout) */
@@ -221,6 +226,7 @@ h1 {
     width: 100%;
     max-width: 600px; /* Consistent card width */
     margin: 0 auto; /* Ensures no overlap by centering each card */
+    overflow: hidden; /* Prevents inner content from causing horizontal scrolling */
 }
 
 .project-card:hover {
