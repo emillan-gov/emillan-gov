@@ -2,7 +2,7 @@
 layout: project
 title: "Whitebark Pine Health Monitoring"
 date: 2025-02-06
-description: "Work related to the collection and analysis of data related to Whitebark Pines and the presence of blister rust."
+description: "Repo for collecting & analyzing Whitebark pine health data, including presence of blister rust."
 image: "/assets/project_images/pine.PNG"
 stack:
 - python
