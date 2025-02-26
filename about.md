@@ -6,7 +6,7 @@ permalink: /about/
 
 <div class="about-container">
     <div class="profile-pic">
-        <img src="/assets/project_images/profile.jfif" alt="Eric Millan">
+        <img src="/assets/project_images/profile.jpeg" alt="Eric Millan">
     </div>
     <div class="about-text">
         <h1>Hi, I'm Eric Millan</h1>
