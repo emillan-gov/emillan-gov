@@ -193,13 +193,13 @@ h1 {
 /* ============================== */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Ensures cards remain wide */
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); /* Ensures flexible column layout */
     grid-auto-rows: auto; /* Allows rows to expand dynamically */
-    gap: 40px; /* Consistent spacing */
+    gap: 50px; /* Increased gap between project cards */
     padding: 20px;
-    max-width: 90%;
-    margin: auto;
-    align-items: start; /* Aligns content properly */
+    max-width: 95%; /* Prevents grid from stretching too wide */
+    margin: 0 auto; /* Centers the grid and keeps consistent spacing */
+    align-items: start; /* Ensures cards align at the top */
 
     /* Enables scrolling for overflowing content */
     max-height: calc(100vh - 300px); /* Prevents grid from growing beyond viewport */
@@ -218,8 +218,8 @@ h1 {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 600px; /* Keeps a consistent width */
-    margin: auto;
+    max-width: 600px; /* Consistent card width */
+    margin: 0 auto; /* Ensures no overlap by centering each card */
 }
 
 .project-card:hover {
