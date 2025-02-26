@@ -17,7 +17,7 @@ permalink: /projects/
             <img src="{{ '/assets/icons/' | relative_url }}{{ tech }}.png" alt="{{ tech }}" class="stack-icon">
           {% endfor %}
         </div>
-        <a href="{{ project.url }}" class="project-link">View Project →</a>
+        <a href="{{ project.github }}" class="project-link">View Project →</a>
       </div>
       <div class="project-image-container">
         <img src="{{ project.image | relative_url }}" alt="{{ project.title }}" class="project-image">
