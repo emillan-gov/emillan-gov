@@ -193,13 +193,17 @@ h1 {
 /* ============================== */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Flexible column layout */
-    grid-auto-rows: auto; /* Automatically adjust row heights */
-    gap: 40px; /* Reduced gap for a tighter look */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Flexible columns */
+    grid-auto-rows: auto; /* Allows rows to expand dynamically */
+    gap: 40px; /* Consistent spacing */
     padding: 20px;
     max-width: 90%;
     margin: auto;
-    align-items: start; /* Ensures cards align at the top */
+    align-items: start; /* Aligns content properly */
+
+    /* Enables scrolling for overflowing content */
+    max-height: calc(100vh - 300px); /* Prevents grid from growing beyond viewport */
+    overflow-y: auto; /* Allows vertical scrolling when necessary */
 }
 
 /* Project Cards */
@@ -213,7 +217,7 @@ h1 {
     flex-direction: column; /* Stack content vertically */
     align-items: center;
     width: 100%;
-    max-width: 400px; /* Ensures cards remain the same width */
+    max-width: 400px; /* Fixed width for consistency */
     margin: auto;
 }
 
@@ -221,10 +225,10 @@ h1 {
     transform: translateY(-5px);
 }
 
-/* Left Side: Project Info */
+/* Project Info */
 .project-info {
     width: 100%;
-    text-align: center; /* Centers text inside the card */
+    text-align: center;
 }
 
 .project-info h2 {
