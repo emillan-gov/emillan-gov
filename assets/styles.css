@@ -328,3 +328,49 @@ body {
         width: 100%;
     }
 }
+
+/* ============================== */
+/*          About Page            */
+/* ============================== */
+.about-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 800px;
+    margin: 50px auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.profile-pic img {
+    width: 150px; /* Adjust for desired image size */
+    height: 150px;
+    border-radius: 50%; /* Makes it circular */
+    object-fit: cover;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-text {
+    margin-left: 30px;
+}
+
+.about-text h1 {
+    font-size: 28px;
+    color: #234075;
+}
+
+.about-text p {
+    font-size: 16px;
+    color: #666;
+    margin-top: 10px;
+}
+
+.about-text a {
+    color: #234075;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.about-text a:hover {
+    text-decoration: underline;
+}
