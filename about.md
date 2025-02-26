@@ -17,7 +17,7 @@ permalink: /about/
             When I'm not working with maps, I enjoy hiking, trail running, and exploring the backcountry.
         </p>
         <p>
-            Connect with me on <a href="https://www.linkedin.com/ericmillan" target="_blank">LinkedIn</a>.
+            Connect with me on <a href="https://www.linkedin.com/in/ericmillan/" target="_blank">LinkedIn</a>.
         </p>
     </div>
 </div>
