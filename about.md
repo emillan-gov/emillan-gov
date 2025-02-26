@@ -25,6 +25,6 @@ permalink: /about/
 <ul>
   <li>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></li>
   <li>GitHub: <a href="https://github.com/emillan-gov">github.com/emillan-gov</a></li>
-  <li>LinkedIn: <a href="https://linkedin.com/in/yourname">linkedin.com/in/yourname</a></li>
+  <li>LinkedIn: <a href="https://linkedin.com/in/ericmillan">linkedin.com/in/ericmillan</a></li>
 </ul>
 
