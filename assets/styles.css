@@ -204,6 +204,7 @@ h1 {
     /* Enables scrolling for overflowing content */
     max-height: calc(100vh - 300px); /* Prevents grid from growing beyond viewport */
     overflow-y: auto; /* Allows vertical scrolling when necessary */
+    overflow-x: hidden;
 }
 
 /* Project Cards (Horizontal Layout) */
