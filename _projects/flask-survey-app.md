@@ -7,8 +7,7 @@ image: "/assets/project_images/pine.PNG"
 stack:
 - python
 - postgresql
-github: "/assets/project_images/pine.PNG"
-url: "https://github.com/emillan-gov/5_needle_pine_health_transect"
+github: "https://github.com/emillan-gov/5_needle_pine_health_transect"
 ---
 
 ## Overview
