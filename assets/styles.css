@@ -197,7 +197,7 @@ h1 {
     grid-auto-rows: auto; /* Allows rows to expand dynamically */
     gap: 50px; /* Ensures space between project cards */
     padding: 20px;
-    max-width: 95%; /* Prevents grid from stretching too wide */
+    max-width: 90%; /* Prevents grid from stretching too wide */
     margin: 0 auto; /* Centers the grid */
 
     /* Scroll Fixes */
