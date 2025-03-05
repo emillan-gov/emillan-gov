@@ -1,8 +1,8 @@
 ---
 layout: project
-title: "Test 3"
+title: "CE Recreation Work"
 date: 2025-02-06
-description: "A simple survey app using Python."
+description: "Work related to the collation of data representing the impact of recreation on BC's Landscape. For Integration with the Cumulative Effects Human Disturbance Initiative"
 image: "/assets/project_images/pine.PNG"
 stack:
 - python
@@ -10,7 +10,7 @@ github: "/assets/project_images/pine.PNG"
 ---
 
 ## Overview
-This project is a web-based survey app built with Flask. It saves responses to a PostgreSQL database.
+test
 
 ## Features
 ✔️ Flask web server  
