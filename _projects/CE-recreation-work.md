@@ -2,7 +2,7 @@
 layout: project
 title: "CE Recreation Work"
 date: 2025-02-06
-description: "Work related to the collation of data representing the impact of recreation on BC's Landscape. For Integration with the Cumulative Effects Human Disturbance Initiative"
+description: "Repo for collating impact of recreation on the Landscape. Part of Cumulative Effects Human Disturbance Initiative"
 image: "/assets/project_images/ce_ski_card.png"
 stack:
 - python
