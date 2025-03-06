@@ -1,8 +1,8 @@
 ---
 layout: project
-title: "Test 2"
+title: "Unauthorized Water Use"
 date: 2025-02-06
-description: "A simple survey app using Python."
+description: "Work related to monitoring and investigating potential unauthorized water use."
 image: "/assets/project_images/pine.PNG"
 stack:
 - python
