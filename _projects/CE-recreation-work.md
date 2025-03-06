@@ -2,7 +2,7 @@
 layout: project
 title: "CE Recreation Work"
 date: 2025-02-06
-description: "Repo for collating impact of recreation on the Landscape. Part of Cumulative Effects Human Disturbance Initiative"
+description: "Repo for collating impact of recreation on the Landscape. Part of Cumulative Effects Human Disturbance Initiative."
 image: "/assets/project_images/ce_ski_card.png"
 stack:
 - python
