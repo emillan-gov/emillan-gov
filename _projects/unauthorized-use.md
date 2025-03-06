@@ -3,10 +3,12 @@ layout: project
 title: "Unauthorized Water Use"
 date: 2025-02-06
 description: "Work related to monitoring and investigating potential unauthorized water use."
-image: "/assets/project_images/pine.PNG"
+image: "/assets/project_images/unauth_use.png"
 stack:
 - python
-github: "/assets/project_images/pine.PNG"
+- agol
+- s123
+github: "https://github.com/emillan-gov/Unauthorized-Water-Use"
 ---
 
 ## Overview
