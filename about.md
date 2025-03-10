@@ -22,10 +22,10 @@ permalink: /about/
     </div>
     <div class="academic-logos">
         <a href="https://ukings.ca/" target="_blank">
-            <img src="{{ '/assets/images/UKS_Horiz_Colour_BlueText_RGB.png' | relative_url }}" alt="University of King's College">
+            <img src="{{ '/assets/UKS_Horiz_Colour_BlueText_RGB.png' | relative_url }}" alt="University of King's College">
         </a>
         <a href="https://flemingcollege.ca/" target="_blank">
-            <img src="{{ '/assets/images/FLEMING_Horiz_Colour_RGB.png' | relative_url }}" alt="Fleming College">
+            <img src="{{ '/assets/FLEMING_Horiz_Colour_RGB.png' | relative_url }}" alt="Fleming College">
         </a>
     </div>
 </div>
