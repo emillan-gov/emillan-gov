@@ -21,8 +21,8 @@ permalink: /about/
         </p>
 
         <div class="academic-logos">
-            <img src="{{ '/assets/images/undergrad-logo.png' | relative_url }}" alt="Undergrad Institution Logo">
-            <img src="{{ '/assets/images/postgrad-logo.png' | relative_url }}" alt="Postgrad Institution Logo">
+            <img href="https://ukings.ca/" src="{{ '/assets/images/UKS_Horiz_Colour_BlueText_RGB.png' | relative_url }}" alt="University of King's College">
+            <img href="https://flemingcollege.ca/" src="{{ '/assets/images/FLEMING_Horiz_Colour_RGB.png' | relative_url }}" alt="Fleming College">
         </div>
     </div>
 </div>
