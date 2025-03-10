@@ -20,7 +20,6 @@ permalink: /about/
             Connect with me on <a href="https://www.linkedin.com/in/ericmillan/" target="_blank">LinkedIn</a>.
         </p>
 
-        <!-- Academic Logos -->
         <div class="academic-logos">
             <img src="{{ '/assets/images/undergrad-logo.png' | relative_url }}" alt="Undergrad Institution Logo">
             <img src="{{ '/assets/images/postgrad-logo.png' | relative_url }}" alt="Postgrad Institution Logo">
