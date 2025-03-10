@@ -19,10 +19,13 @@ permalink: /about/
         <p>
             Connect with me on <a href="https://www.linkedin.com/in/ericmillan/" target="_blank">LinkedIn</a>.
         </p>
-
-        <div class="academic-logos">
-            <img href="https://ukings.ca/" src="{{ '/assets/images/UKS_Horiz_Colour_BlueText_RGB.png' | relative_url }}" alt="University of King's College">
-            <img href="https://flemingcollege.ca/" src="{{ '/assets/images/FLEMING_Horiz_Colour_RGB.png' | relative_url }}" alt="Fleming College">
-        </div>
+    </div>
+    <div class="academic-logos">
+        <a href="https://ukings.ca/" target="_blank">
+            <img src="{{ '/assets/images/UKS_Horiz_Colour_BlueText_RGB.png' | relative_url }}" alt="University of King's College">
+        </a>
+        <a href="https://flemingcollege.ca/" target="_blank">
+            <img src="{{ '/assets/images/FLEMING_Horiz_Colour_RGB.png' | relative_url }}" alt="Fleming College">
+        </a>
     </div>
 </div>
