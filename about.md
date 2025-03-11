@@ -19,5 +19,9 @@ permalink: /about/
         <p>
             Connect with me on <a href="https://www.linkedin.com/in/ericmillan/" target="_blank">LinkedIn</a>.
         </p>
+        <div class="academic-logos">
+            <img src="{{ '/assets/UKC_Horiz_Colour_BlueText_RGB.png' | relative_url }}" alt="UKC">
+            <img src="{{ '/assets/FLEMING_Horiz_Colour_RGB.png' | relative_url }}" alt="Fleming">
+        </div>
     </div>
 </div>
