@@ -49,22 +49,21 @@ html, body {
 /* GLOBAL CUSTOM SCROLLBAR */
 body::-webkit-scrollbar {
     width: 10px;
-  }
-  
-  body::-webkit-scrollbar-track {
+}
+
+body::-webkit-scrollbar-track {
     background: #e4e4e4;
     border-radius: 10px;
-  }
-  
-  body::-webkit-scrollbar-thumb {
+}
+
+body::-webkit-scrollbar-thumb {
     background: #234075; /* dark navy */
     border-radius: 10px;
-  }
-  
-  body::-webkit-scrollbar-thumb:hover {
+}
+
+body::-webkit-scrollbar-thumb:hover {
     background: #e3a82b; /* gold accent on hover */
-  }
-  
+}
 
 /* ============================== */
 /*            Navbar              */
