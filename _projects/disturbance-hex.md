@@ -8,6 +8,7 @@ stack:
 - python
 
 github: "https://github.com/emillan-gov/disturbance-hex"
+example: "https://emillan-gov.github.io/disturbance-hex/"
 ---
 
 ## Overview
