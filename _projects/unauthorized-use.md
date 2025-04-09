@@ -3,7 +3,7 @@ layout: project
 title: "Unauthorized Water Use"
 date: 2025-02-06
 description: "Work related to monitoring and investigating potential unauthorized water use."
-image: "/assets/project_images/hullcar_cover.png"
+image: "/assets/project_images/unauth_use.png"
 stack:
 - python
 - agol
