@@ -7,7 +7,7 @@ image: "/assets/project_images/hullcar_cover.png"
 stack:
 - python
 - arcpro
-github: "https://github.com/emillan-gov/Caribou_Tools"
+github: "https://github.com/bcgov/hullcar-watershed-app"
 ---
 
 ## Overview
