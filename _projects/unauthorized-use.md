@@ -7,7 +7,7 @@ image: "/assets/project_images/unauth_use.png"
 stack:
 - python
 - agol
-github: "https://github.com/bcgov/hullcar-watershed-app"
+github: "https://github.com/emillan-gov/Unauthorized-Water-Use"
 ---
 
 ## Overview
